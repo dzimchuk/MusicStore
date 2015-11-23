@@ -23,6 +23,7 @@ namespace MusicStore
             var builder = new ConfigurationBuilder()
                 .SetBasePath(applicationEnvironment.ApplicationBasePath)
                 .AddJsonFile("config.json")
+                .AddJsonFile(@"d:\dev\MusicStoreAppInsights.json")
                 //All environment variables in the process's context flow in as configuration values.
                 .AddEnvironmentVariables();
 
@@ -35,6 +36,8 @@ namespace MusicStore
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
+            services.AddApplicationInsightsTelemetry(Configuration);
 
             var useInMemoryStore = !_platform.IsRunningOnWindows
                 || _platform.IsRunningOnMono
@@ -102,6 +105,8 @@ namespace MusicStore
         {
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
 
+            app.UseApplicationInsightsRequestTelemetry();
+
             // StatusCode pages to gracefully handle status codes 400-599.
             app.UseStatusCodePagesWithRedirects("~/Home/StatusCodePage");
 
@@ -115,6 +120,8 @@ namespace MusicStore
             // to see what packages are used by the application
             // default path is: /runtimeinfo
             app.UseRuntimeInfoPage();
+
+            app.UseApplicationInsightsExceptionTelemetry();
 
             Configure(app);
         }
