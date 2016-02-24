@@ -1,4 +1,5 @@
 {
+  "userSecretsId": "MusicStoreSecrets",
   "authors": [
     "Microsoft"
   ],
@@ -40,8 +41,10 @@
     "Microsoft.Extensions.Configuration.CommandLine": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-    "Microsoft.ApplicationInsights.AspNet": "1.0.0-rc1"
+    "Microsoft.ApplicationInsights.AspNet": "1.0.0-rc1",
+    "Microsoft.Extensions.Caching.Redis": "1.0.0-rc1-final"
   },
   "commands": {
     "gen": "Microsoft.Extensions.CodeGeneration",
@@ -51,11 +54,6 @@
     "weblistener": "Microsoft.AspNet.Hosting --server Microsoft.AspNet.Server.WebListener --server.urls http://localhost:5002"
   },
   "frameworks": {
-    "dnx451": {},
-    "dnxcore50": {
-      "dependencies": {
-        "System.Runtime.Serialization.Primitives": "4.1.0-beta-23516"
-      }
-    }
+    "dnx451": { }
   }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics.Entity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
+using Microsoft.Extensions.Caching.Redis;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,7 +24,7 @@ namespace MusicStore
             var builder = new ConfigurationBuilder()
                 .SetBasePath(applicationEnvironment.ApplicationBasePath)
                 .AddJsonFile("config.json")
-                .AddJsonFile(@"d:\dev\MusicStoreAppInsights.json")
+                .AddUserSecrets()
                 //All environment variables in the process's context flow in as configuration values.
                 .AddEnvironmentVariables();
 
@@ -80,7 +81,10 @@ namespace MusicStore
             services.AddMvc();
 
             // Add memory cache services
-            services.AddCaching();
+            //services.AddCaching();
+
+            services.AddRedisCache();
+            services.Configure<RedisCacheOptions>(Configuration.GetSection("Redis"));
 
             // Add session related services.
             services.AddSession();
