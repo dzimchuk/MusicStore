@@ -1,5 +1,7 @@
+using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Diagnostics.Entity;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Caching.Redis;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using MusicStore.Components;
 using MusicStore.Models;
 
@@ -108,7 +111,7 @@ namespace MusicStore
         public void ConfigureDevelopment(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddConsole(minLevel: LogLevel.Warning);
-
+            
             app.UseApplicationInsightsRequestTelemetry();
 
             // StatusCode pages to gracefully handle status codes 400-599.
@@ -208,6 +211,18 @@ namespace MusicStore
                 options.DisplayName = "MicrosoftAccount - Requires project changes";
                 options.ClientId = "000000004012C08A";
                 options.ClientSecret = "GaMQ2hCnqAC6EcDLnXsAeBVIJOLmeutL";
+            });
+
+            app.Use(next => async context =>
+            {
+                context.Response.OnStarting(state =>
+                {
+                    var ctx = (HttpContext)state;
+                    ctx.Response.Headers.Add("X-Instance-Id", new[] { Configuration["WEBSITE_INSTANCE_ID"] });
+
+                    return Task.FromResult(0);
+                }, context);
+                await next(context);
             });
 
             // Add MVC to the request pipeline
