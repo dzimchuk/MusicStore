@@ -218,7 +218,8 @@ namespace MusicStore
                 context.Response.OnStarting(state =>
                 {
                     var ctx = (HttpContext)state;
-                    ctx.Response.Headers.Add("X-Instance-Id", new[] { Configuration["WEBSITE_INSTANCE_ID"] });
+                    ctx.Response.Headers.Add("X-Instance-Id", Configuration["WEBSITE_INSTANCE_ID"]);
+                    ctx.Response.Headers.Add("Arr-Disable-Session-Affinity", "True");
 
                     return Task.FromResult(0);
                 }, context);
